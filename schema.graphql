@@ -1,0 +1,38 @@
+type PoolInfo @entity {
+  id: ID!
+  totalLiquidity: BigInt!
+  availableLiquidity: BigInt!
+  lockedAmount: BigInt!
+  utilizationRate: BigInt!
+  poolPrice: BigInt!
+  policyCount: Int!
+  paused: Boolean!
+}
+
+type PolicyInfo @entity {
+  id: ID!
+  policyId: BigInt!
+  asset: String!
+  owner: Owner!
+  payOutAmount: BigInt!
+  premium: BigInt!
+  endTime: BigInt!
+  threshold: Int!
+  startTime: BigInt!
+  utilized: Boolean!
+}
+
+type Owner @entity {
+  id: ID!
+  ownedPolicies: [PolicyInfo!]! @derivedFrom(field: "owner")
+  policyCount: Int!
+  liquidityProvided: BigInt!
+  unlockTimestamp: BigInt!
+  unlockAmount: BigInt!
+}
+
+type InsureDayData @entity {
+  id: ID! # timestamp rounded to current day by dividing by 86400
+  date: Int!
+  dailyVolume: BigInt!
+}

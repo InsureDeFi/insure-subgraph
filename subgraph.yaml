@@ -1,0 +1,64 @@
+specVersion: 0.0.2
+description: A peer to pool insurance protocol
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: RiskPool
+    network: godwoken
+    source:
+      address: '0x2F42b10d93C65FE0A9D21f347cc73583A2BeF3f9'
+      abi: RiskPool
+      startBlock: 14
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - PoolInfo
+        - PolicyInfo
+        - Owner
+      abis:
+        - name: RiskPool
+          file: ./abis/RiskPool.json
+      eventHandlers:
+        - event: Deposit(indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: WithdrawRequested(indexed address,uint256,uint256)
+          handler: handleWithdrawRequested
+        - event: Withdraw(indexed address,uint256,uint256)
+          handler: handleWithdraw
+        - event: Insured(indexed address,uint256,string,uint256,uint256,uint256,uint256,uint256)
+          handler: handleInsured
+        - event: PolicyPaid(indexed uint256)
+          handler: handlePolicyPaid
+        - event: Unlocked(uint256,uint256)
+          handler: handleUnlocked
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+      file: ./src/mappings.ts
+
+  - kind: ethereum/contract
+    name: Vault
+    network: godwoken
+    source:
+      address: '0x29888B920a38C084179a990f3A83B4d3ccaa58d5'
+      abi: Vault
+      startBlock: 12
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - PoolInfo
+        - PolicyInfo
+        - Owner
+      abis:
+        - name: Vault
+          file: ./abis/Vault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mappings.ts
