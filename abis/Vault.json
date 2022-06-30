@@ -8,7 +8,7 @@
       },
       {
         "internalType": "contract IERC20",
-        "name": "_USDC",
+        "name": "_usdc",
         "type": "address"
       }
     ],
@@ -66,19 +66,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "USDC",
-    "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -116,11 +103,6 @@
       {
         "internalType": "uint256",
         "name": "_protocolFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_stakingDist",
         "type": "uint256"
       }
     ],
@@ -415,6 +397,19 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "usdc",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

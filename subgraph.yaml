@@ -5,11 +5,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: RiskPool
-    network: godwoken
+    network: godwoken-testnet
     source:
-      address: '0x2F42b10d93C65FE0A9D21f347cc73583A2BeF3f9'
+      address: '0x8E890C091382051F3947b227072cAc14c00c9E8D'
       abi: RiskPool
-      startBlock: 14
+      startBlock: 103495
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -42,11 +42,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: Vault
-    network: godwoken
+    network: godwoken-testnet
     source:
-      address: '0x29888B920a38C084179a990f3A83B4d3ccaa58d5'
+      address: '0xD5e7f7608F98e4b6D96B508F99824957E7da3466'
       abi: Vault
-      startBlock: 12
+      startBlock: 103495
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

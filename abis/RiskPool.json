@@ -8,7 +8,7 @@
       },
       {
         "internalType": "contract IERC20",
-        "name": "_USDC",
+        "name": "_usdc",
         "type": "address"
       }
     ],
@@ -77,6 +77,12 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "currentAssetPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "payOutAmount",
         "type": "uint256"
       },
@@ -96,12 +102,6 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "endTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "threshold",
         "type": "uint256"
       }
     ],
@@ -218,19 +218,6 @@
   },
   {
     "inputs": [],
-    "name": "USDC",
-    "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "addressesProvider",
     "outputs": [
       {
@@ -297,9 +284,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_asset",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "_assetId",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -309,11 +296,6 @@
       {
         "internalType": "uint256",
         "name": "_duration",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_threshold",
         "type": "uint256"
       }
     ],
@@ -409,18 +391,13 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "threshold",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "insured",
         "type": "address"
       },
       {
         "internalType": "bool",
-        "name": "isUtilized",
+        "name": "utilized",
         "type": "bool"
       }
     ],
@@ -435,19 +412,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "priceOracle",
-    "outputs": [
-      {
-        "internalType": "contract IPriceOracle",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -519,10 +483,29 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "unlock",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "unlockExpiredFunds",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "usdc",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

@@ -3,7 +3,7 @@ type PoolInfo @entity {
   totalLiquidity: BigInt!
   availableLiquidity: BigInt!
   lockedAmount: BigInt!
-  utilizationRate: BigInt!
+  utilizationRate: BigDecimal!
   poolPrice: BigInt!
   policyCount: Int!
   paused: Boolean!
@@ -13,11 +13,11 @@ type PolicyInfo @entity {
   id: ID!
   policyId: BigInt!
   asset: String!
+  assetPrice: BigInt!
   owner: Owner!
   payOutAmount: BigInt!
   premium: BigInt!
   endTime: BigInt!
-  threshold: Int!
   startTime: BigInt!
   utilized: Boolean!
 }
