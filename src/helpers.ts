@@ -3,7 +3,7 @@ import { RiskPool } from '../generated/RiskPool/RiskPool';
 import { InsureDayData, Owner, PolicyInfo, PoolInfo } from '../generated/schema';
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
-export const RISK_POOL_ADDRESS = '0x8E890C091382051F3947b227072cAc14c00c9E8D';
+export const RISK_POOL_ADDRESS = '0xFd153eB5B484b5c304c2E004dF82f07f48d884aE';
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
 export let ZERO_BD = BigDecimal.fromString('0');

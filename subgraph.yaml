@@ -7,9 +7,9 @@ dataSources:
     name: RiskPool
     network: godwoken-testnet
     source:
-      address: '0x8E890C091382051F3947b227072cAc14c00c9E8D'
+      address: '0xFd153eB5B484b5c304c2E004dF82f07f48d884aE'
       abi: RiskPool
-      startBlock: 103495
+      startBlock: 150034
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -44,9 +44,9 @@ dataSources:
     name: Vault
     network: godwoken-testnet
     source:
-      address: '0xD5e7f7608F98e4b6D96B508F99824957E7da3466'
+      address: '0xB537d6E43d4DBD2246c31586BD2C0B382bf26bca'
       abi: Vault
-      startBlock: 103495
+      startBlock: 150034
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
