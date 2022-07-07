@@ -44,6 +44,7 @@ export function createUser(address: Address): Owner {
     user.policyCount = 0;
     user.liquidityProvided = ZERO_BI;
     user.unlockTimestamp = ZERO_BI;
+    user.shares = ZERO_BI;
     user.unlockAmount = ZERO_BI;
   }
   return user;

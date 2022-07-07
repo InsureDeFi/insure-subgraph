@@ -24,6 +24,7 @@ export function handleDeposit(event: Deposit): void {
 
   let depositor = createUser(event.params.depositor);
   depositor.liquidityProvided = depositor.liquidityProvided.plus(event.params.amount);
+  depositor.shares = depositor.shares.plus(event.params.mintAmount);
   depositor.save();
 }
 
@@ -123,6 +124,7 @@ export function handleTransfer(event: Transfer): void {
   fromUser.liquidityProvided = fromUser.liquidityProvided.minus(amountUSDC).lt(ZERO_BI)
     ? ZERO_BI
     : fromUser.liquidityProvided.minus(amountUSDC);
+  fromUser.shares = fromUser.shares.minus(event.params.value);
   fromUser.save();
 
   if (event.params.to != Address.zero()) {

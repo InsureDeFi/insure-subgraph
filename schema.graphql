@@ -27,6 +27,7 @@ type Owner @entity {
   ownedPolicies: [PolicyInfo!]! @derivedFrom(field: "owner")
   policyCount: Int!
   liquidityProvided: BigInt!
+  shares: BigInt!
   unlockTimestamp: BigInt!
   unlockAmount: BigInt!
 }
