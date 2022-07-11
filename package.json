@@ -1,6 +1,7 @@
 {
   "name": "insure-subgraph",
-  "license": "GPLv3",
+  "version": "1.0.0",
+  "license": "AGPLv3",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

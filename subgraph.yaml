@@ -1,5 +1,5 @@
-specVersion: 0.0.2
-description: A peer to pool insurance protocol
+specVersion: 0.0.4
+description: Insure protocol subgraph
 schema:
   file: ./schema.graphql
 dataSources:
