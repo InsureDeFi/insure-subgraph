@@ -1,18 +1,19 @@
 import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { decimal, integer } from '@protofire/subgraph-toolkit';
 import { RiskPool } from '../generated/RiskPool/RiskPool';
-import { InsureDayData, Owner, PolicyInfo, PoolInfo } from '../generated/schema';
+import {
+  Asset,
+  LiquidityPosition,
+  LiquidityPositionSnapshot,
+  Policy,
+  Pool,
+  Transaction,
+  User,
+} from '../generated/schema';
 
-export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
-export const RISK_POOL_ADDRESS = '0xFd153eB5B484b5c304c2E004dF82f07f48d884aE';
-export let ZERO_BI = BigInt.fromI32(0);
-export let ONE_BI = BigInt.fromI32(1);
-export let ZERO_BD = BigDecimal.fromString('0');
-export let ONE_BD = BigDecimal.fromString('1');
-
-class PoolData {
-  utilizationRate: BigDecimal;
-  poolPrice: BigInt;
-}
+export const RISK_POOL_ADDRESS = '0x67192F5F7eCD8CeF8eDB5fB89c6BC95351bBF4d7';
+export let BI_18 = BigInt.fromI32(18);
+export let BI_6 = BigInt.fromI32(6);
 
 export function bigIntExp18(): BigInt {
   return BigInt.fromString('1000000000000000000');
@@ -22,74 +23,131 @@ export function bigDecimalExp18(): BigDecimal {
   return BigDecimal.fromString('1000000000000000000');
 }
 
-export function createPool(): PoolInfo {
-  let pool = PoolInfo.load(RISK_POOL_ADDRESS);
+export function exponentToBigDecimal(decimals: BigInt): BigDecimal {
+  let bd = BigDecimal.fromString('1');
+  for (let i = integer.ZERO; i.lt(decimals as BigInt); i = i.plus(integer.ONE)) {
+    bd = bd.times(BigDecimal.fromString('10'));
+  }
+  return bd;
+}
+
+export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: BigInt): BigDecimal {
+  if (exchangeDecimals == integer.ZERO) {
+    return tokenAmount.toBigDecimal();
+  }
+  return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals));
+}
+
+export function createAsset(assetSymbol: string): Asset {
+  let asset = Asset.load(assetSymbol);
+  if (asset == null) {
+    asset = new Asset(assetSymbol);
+    asset.symbol = assetSymbol;
+    asset.volume = decimal.ZERO;
+    asset.txCount = integer.ZERO;
+  }
+  return asset;
+}
+
+export function createPool(): Pool {
+  let pool = Pool.load(RISK_POOL_ADDRESS);
   if (pool === null) {
-    pool = new PoolInfo(RISK_POOL_ADDRESS);
-    pool.totalLiquidity = ZERO_BI;
-    pool.availableLiquidity = ZERO_BI;
-    pool.lockedAmount = ZERO_BI;
-    pool.utilizationRate = ZERO_BD;
-    pool.poolPrice = ZERO_BI;
-    pool.policyCount = 0;
+    pool = new Pool(RISK_POOL_ADDRESS);
+    pool.totalVolume = decimal.ZERO;
+    pool.utilizationRate = decimal.ZERO;
+    pool.policyCount = integer.ZERO;
+    pool.txCount = integer.ZERO;
+    pool.totalAssets = decimal.ZERO;
+    pool.availableAssets = decimal.ZERO;
+    pool.lockedAssets = decimal.ZERO;
+    pool.sharesTotalSupply = decimal.ZERO;
     pool.paused = false;
+    pool.liquidityProviderCount = integer.ZERO;
+    pool.assets = [];
+    pool.poolHourData = [];
+    pool.liquidityPositions = [];
+    pool.liquidityPositionSnapshots = [];
+    pool.depositHistory = [];
+    pool.withdrawalHistory = [];
+    pool.policyHistory = [];
+    pool.save();
   }
   return pool;
 }
 
-export function createUser(address: Address): Owner {
-  let user = Owner.load(address.toHexString());
+export function createUser(address: Address): User {
+  let user = User.load(address.toHexString());
   if (user === null) {
-    user = new Owner(address.toHexString());
-    user.policyCount = 0;
-    user.liquidityProvided = ZERO_BI;
-    user.unlockTimestamp = ZERO_BI;
-    user.shares = ZERO_BI;
-    user.unlockAmount = ZERO_BI;
+    user = new User(address.toHexString());
+    user.policyCount = integer.ZERO;
+    user.premiumPaid = decimal.ZERO;
+    user.save();
   }
   return user;
 }
 
-export function createPolicy(policyId: BigInt): PolicyInfo {
-  let policy = PolicyInfo.load(policyId.toHex());
+export function createTransaction(transactionHash: string, event: ethereum.Event): Transaction {
+  let transaction = Transaction.load(transactionHash);
+  if (transaction === null) {
+    transaction = new Transaction(transactionHash);
+    transaction.blockNumber = event.block.number;
+    transaction.timestamp = event.block.timestamp;
+    transaction.deposits = [];
+    transaction.withdrawals = [];
+    transaction.policies = [];
+    transaction.save();
+  }
+  return transaction;
+}
+
+export function createLiquidityPosition(user: Address): LiquidityPosition {
+  let id = user.toHexString();
+  let userLiquidityPosition = LiquidityPosition.load(id);
+  let pool = createPool();
+  if (userLiquidityPosition === null) {
+    pool.liquidityProviderCount = pool.liquidityProviderCount.plus(integer.ONE);
+    userLiquidityPosition = new LiquidityPosition(id);
+    userLiquidityPosition.user = user.toHexString();
+    userLiquidityPosition.shares = decimal.ZERO;
+    userLiquidityPosition.save();
+  }
+  pool.liquidityPositions = pool.liquidityPositions.concat([userLiquidityPosition.id]);
+  pool.save();
+
+  return userLiquidityPosition;
+}
+
+export function createLiquiditySnapshot(position: LiquidityPosition, event: ethereum.Event): void {
+  let pool = createPool();
+  let timestamp = event.block.timestamp.toI32();
+
+  let snapshot = new LiquidityPositionSnapshot(position.id.concat(timestamp.toString()));
+  snapshot.liquidityPosition = position.id;
+  snapshot.timestamp = timestamp;
+  snapshot.block = event.block.number.toI32();
+  snapshot.user = position.user;
+  snapshot.totalAssets = pool.totalAssets;
+  snapshot.availableAssets = pool.availableAssets;
+  snapshot.lockedAssets = pool.lockedAssets;
+  snapshot.sharesTotalSupply = pool.sharesTotalSupply;
+  snapshot.shares = position.shares;
+  snapshot.save();
+
+  pool.liquidityPositionSnapshots = pool.liquidityPositionSnapshots.concat([snapshot.id]);
+  pool.save();
+}
+
+export function createPolicy(policyId: BigInt): Policy {
+  let policy = Policy.load(policyId.toHex());
   if (policy === null) {
-    policy = new PolicyInfo(policyId.toHex());
-    policy.policyId = policyId;
-    policy.asset = '';
-    policy.assetPrice = ZERO_BI;
-    policy.owner = ADDRESS_ZERO;
-    policy.payOutAmount = ZERO_BI;
-    policy.premium = ZERO_BI;
-    policy.endTime = ZERO_BI;
-    policy.startTime = ZERO_BI;
+    policy = new Policy(policyId.toHex());
     policy.utilized = false;
   }
   return policy;
 }
 
-export function getUtilRateAndPoolPrice(poolAddress: Address): PoolData {
-  const pool = RiskPool.bind(poolAddress);
-  const utilizationRate = pool.utilizationRate().divDecimal(bigDecimalExp18());
-  const poolPrice = pool.poolPrice();
-  return { utilizationRate, poolPrice };
-}
-
-export function getTotalLiquidity(poolAddress: Address): BigInt {
-  const pool = RiskPool.bind(poolAddress);
-  return pool.totalLiquidity();
-}
-
-export function createInsureDayData(event: ethereum.Event): InsureDayData {
-  let timestamp = event.block.timestamp.toI32();
-  let dayID = timestamp / 86400;
-  let dayStartTimestamp = dayID * 86400;
-  let insureDayData = InsureDayData.load(dayID.toString());
-  if (insureDayData === null) {
-    insureDayData = new InsureDayData(dayID.toString());
-    insureDayData.date = dayStartTimestamp;
-    insureDayData.dailyVolume = ZERO_BI;
-  }
-  insureDayData.save();
-
-  return insureDayData;
+export function getTotalAssets(): BigDecimal {
+  const pool = RiskPool.bind(Address.fromString(RISK_POOL_ADDRESS));
+  const totalAssets = pool.totalAssets();
+  return convertTokenToDecimal(totalAssets, BI_6);
 }

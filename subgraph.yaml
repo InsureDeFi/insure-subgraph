@@ -7,28 +7,37 @@ dataSources:
     name: RiskPool
     network: godwoken-testnet
     source:
-      address: '0xFd153eB5B484b5c304c2E004dF82f07f48d884aE'
+      address: '0x67192F5F7eCD8CeF8eDB5fB89c6BC95351bBF4d7'
       abi: RiskPool
-      startBlock: 150034
+      startBlock: 223712
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - PoolInfo
-        - PolicyInfo
-        - Owner
+        - Pool
+        - Asset
+        - Policy
+        - User
+        - LiquidityPosition
+        - LiquidityPositionSnapshot
+        - Transaction
+        - Deposit
+        - Withdraw
+        - PoolHourData
+        - PoolDayData
+        - AssetDayData
       abis:
         - name: RiskPool
           file: ./abis/RiskPool.json
       eventHandlers:
-        - event: Deposit(indexed address,uint256,uint256)
+        - event: AssetInitialized(indexed uint256,string)
+          handler: handleAssetInitialized
+        - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
-        - event: WithdrawRequested(indexed address,uint256,uint256)
-          handler: handleWithdrawRequested
-        - event: Withdraw(indexed address,uint256,uint256)
+        - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-        - event: Insured(indexed address,uint256,string,uint256,uint256,uint256,uint256,uint256)
+        - event: Insured(indexed address,uint256,string,uint256,uint256,uint256,uint256,uint256,uint8)
           handler: handleInsured
         - event: PolicyPaid(indexed uint256)
           handler: handlePolicyPaid
@@ -38,27 +47,6 @@ dataSources:
           handler: handlePaused
         - event: Unpaused(address)
           handler: handleUnpaused
-      file: ./src/mappings.ts
-
-  - kind: ethereum/contract
-    name: Vault
-    network: godwoken-testnet
-    source:
-      address: '0xB537d6E43d4DBD2246c31586BD2C0B382bf26bca'
-      abi: Vault
-      startBlock: 150034
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - PoolInfo
-        - PolicyInfo
-        - Owner
-      abis:
-        - name: Vault
-          file: ./abis/Vault.json
-      eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mappings.ts

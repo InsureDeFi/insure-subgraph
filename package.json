@@ -15,12 +15,12 @@
     "url": "git+https://github.com/insure/insure-subgraph.git"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "0.32.0",
+    "@graphprotocol/graph-cli": "0.33.0",
     "@graphprotocol/graph-ts": "0.27.0",
     "@protofire/subgraph-toolkit": "0.1.2",
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
-    "@typescript-eslint/parser": "^5.30.5",
-    "eslint": "^8.19.0",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "2.7.1",
     "typescript": "^4.7.4"

@@ -1,39 +1,152 @@
-type PoolInfo @entity {
+type Pool @entity {
   id: ID!
-  totalLiquidity: BigInt!
-  availableLiquidity: BigInt!
-  lockedAmount: BigInt!
+
+  totalVolume: BigDecimal!
   utilizationRate: BigDecimal!
-  poolPrice: BigInt!
-  policyCount: Int!
+  policyCount: BigInt!
+  txCount: BigInt!
+
+  totalAssets: BigDecimal!
+  availableAssets: BigDecimal!
+  lockedAssets: BigDecimal!
+
+  sharesTotalSupply: BigDecimal!
+
   paused: Boolean!
+
+  liquidityProviderCount: BigInt!
 }
 
-type PolicyInfo @entity {
+type Asset @entity {
   id: ID!
-  policyId: BigInt!
-  asset: String!
-  assetPrice: BigInt!
-  owner: Owner!
-  payOutAmount: BigInt!
-  premium: BigInt!
-  endTime: BigInt!
+  assetId: BigInt!
+  symbol: String!
+  volume: BigDecimal!
+  txCount: BigInt!
+
+  addedAtTimestamp: BigInt!
+  addedAtBlockNumber: BigInt!
+
+  policies: [Policy!]! @derivedFrom(field: "asset")
+  assetDayData: [AssetDayData!]! @derivedFrom(field: "asset")
+}
+
+type Policy @entity {
+  id: ID!
+  transaction: Transaction!
+
+  asset: Asset!
+  assetPrice: BigDecimal!
+  insured: User!
+  payOutAmount: BigDecimal!
+  premium: BigDecimal!
   startTime: BigInt!
+  endTime: BigInt!
+  threshold: Int!
   utilized: Boolean!
 }
 
-type Owner @entity {
+type User @entity {
   id: ID!
-  ownedPolicies: [PolicyInfo!]! @derivedFrom(field: "owner")
-  policyCount: Int!
-  liquidityProvided: BigInt!
-  shares: BigInt!
-  unlockTimestamp: BigInt!
-  unlockAmount: BigInt!
+  policyCount: BigInt!
+  premiumPaid: BigDecimal!
+
+  policies: [Policy!]! @derivedFrom(field: "insured")
+  liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
 }
 
-type InsureDayData @entity {
-  id: ID! # timestamp rounded to current day by dividing by 86400
+type LiquidityPosition @entity {
+  id: ID!
+  user: User!
+  shares: BigDecimal!
+}
+
+type LiquidityPositionSnapshot @entity {
+  id: ID!
+  liquidityPosition: LiquidityPosition!
+  timestamp: Int!
+  block: Int!
+  user: User!
+
+  totalAssets: BigDecimal!
+  availableAssets: BigDecimal!
+  lockedAssets: BigDecimal!
+
+  sharesTotalSupply: BigDecimal!
+  shares: BigDecimal!
+}
+
+type Transaction @entity {
+  id: ID!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  deposits: [Deposit!]! @derivedFrom(field: "transaction")
+  withdrawals: [Withdraw!]! @derivedFrom(field: "transaction")
+  policies: [Policy!]! @derivedFrom(field: "transaction")
+}
+
+type Deposit @entity {
+  id: ID!
+  transaction: Transaction!
+  timestamp: BigInt!
+
+  to: User!
+  liquidityTokens: BigDecimal!
+
+  caller: User!
+  assets: BigDecimal!
+}
+
+type Withdraw @entity {
+  id: ID!
+  transaction: Transaction!
+  timestamp: BigInt!
+
+  to: User!
+  liquidityTokens: BigDecimal!
+
+  owner: User!
+  caller: User!
+  assets: BigDecimal!
+}
+
+type PoolHourData @entity {
+  id: ID!
+  hourStartUnix: Int!
+
+  totalAssets: BigDecimal!
+  availableAssets: BigDecimal!
+  lockedAssets: BigDecimal!
+
+  sharesTotalSupply: BigDecimal!
+
+  hourlyVolume: BigDecimal!
+  hourlyTxns: BigInt!
+}
+
+type PoolDayData @entity {
+  id: ID!
   date: Int!
-  dailyVolume: BigInt!
+
+  dailyVolume: BigDecimal!
+  totalVolume: BigDecimal!
+
+  protocolFee: BigDecimal!
+
+  totalAssets: BigDecimal!
+  availableAssets: BigDecimal!
+  lockedAssets: BigDecimal!
+
+  txCount: BigInt!
+
+  sharesTotalSupply: BigDecimal!
+}
+
+type AssetDayData @entity {
+  id: ID!
+  date: Int!
+  asset: Asset!
+
+  dailyVolume: BigDecimal!
+  dailyTxns: BigInt!
 }
