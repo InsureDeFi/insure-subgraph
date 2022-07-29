@@ -48,7 +48,6 @@ export function updatePoolHourData(event: ethereum.Event): PoolHourData {
   poolHourData.hourlyTxns = poolHourData.hourlyTxns.plus(integer.ONE);
   poolHourData.save();
 
-  pool.poolHourData = pool.poolHourData.concat([poolHourData.id]);
   pool.save();
 
   return poolHourData;

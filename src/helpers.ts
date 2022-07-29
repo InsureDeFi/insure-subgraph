@@ -63,13 +63,6 @@ export function createPool(): Pool {
     pool.sharesTotalSupply = decimal.ZERO;
     pool.paused = false;
     pool.liquidityProviderCount = integer.ZERO;
-    pool.assets = [];
-    pool.poolHourData = [];
-    pool.liquidityPositions = [];
-    pool.liquidityPositionSnapshots = [];
-    pool.depositHistory = [];
-    pool.withdrawalHistory = [];
-    pool.policyHistory = [];
     pool.save();
   }
   return pool;
@@ -111,7 +104,6 @@ export function createLiquidityPosition(user: Address): LiquidityPosition {
     userLiquidityPosition.shares = decimal.ZERO;
     userLiquidityPosition.save();
   }
-  pool.liquidityPositions = pool.liquidityPositions.concat([userLiquidityPosition.id]);
   pool.save();
 
   return userLiquidityPosition;
@@ -133,7 +125,6 @@ export function createLiquiditySnapshot(position: LiquidityPosition, event: ethe
   snapshot.shares = position.shares;
   snapshot.save();
 
-  pool.liquidityPositionSnapshots = pool.liquidityPositionSnapshots.concat([snapshot.id]);
   pool.save();
 }
 

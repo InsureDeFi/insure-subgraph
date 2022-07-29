@@ -34,7 +34,6 @@ export function handleAssetInitialized(event: AssetInitialized): void {
   asset.addedAtBlockNumber = event.block.number;
   asset.save();
 
-  pool.assets = pool.assets.concat([asset.id]);
   pool.save();
 }
 
@@ -82,7 +81,6 @@ export function handleDeposit(event: Deposit): void {
   pool.totalAssets = getTotalAssets();
   pool.availableAssets = pool.totalAssets.minus(pool.lockedAssets);
   pool.utilizationRate = pool.lockedAssets.div(pool.totalAssets);
-  pool.depositHistory = pool.depositHistory.concat([deposit.id]);
   pool.save();
 
   let liquidityPosition = createLiquidityPosition(event.params.owner);
@@ -117,7 +115,6 @@ export function handleWithdraw(event: Withdraw): void {
   pool.totalAssets = getTotalAssets();
   pool.availableAssets = pool.totalAssets.minus(pool.lockedAssets);
   pool.utilizationRate = pool.lockedAssets.div(pool.totalAssets);
-  pool.withdrawalHistory = pool.withdrawalHistory.concat([withdrawal.id]);
   pool.save();
 
   let liquidityPosition = createLiquidityPosition(event.params.owner);
@@ -168,7 +165,6 @@ export function handleInsured(event: Insured): void {
   pool.lockedAssets = pool.lockedAssets.plus(convertTokenToDecimal(event.params.payOutAmount, BI_6));
   pool.availableAssets = pool.totalAssets.minus(pool.lockedAssets);
   pool.utilizationRate = pool.lockedAssets.div(pool.totalAssets);
-  pool.policyHistory = pool.policyHistory.concat([policy.id]);
   pool.save();
 
   let poolDayData = updatePoolDayData(event);
