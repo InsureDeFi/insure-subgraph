@@ -1,14 +1,7 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { integer, ZERO_ADDRESS } from '@protofire/subgraph-toolkit';
-import {
-  AssetInitialized,
-  Deposit,
-  Insured,
-  PolicyPaid,
-  Transfer,
-  Unlocked,
-  Withdraw,
-} from '../generated/RiskPool/RiskPool';
+import { Deposit, Insured, PolicyPaid, Transfer, Unlocked, Withdraw } from '../generated/RiskPool/RiskPool';
+import { AssetInitialized } from '../generated/RiskPoolCore/RiskPoolCore';
 import { Deposit as DepositEvent, Withdraw as WithdrawEvent, Policy as PolicyEvent } from '../generated/schema';
 import { updateAssetDayData, updatePoolDayData, updatePoolHourData } from './dayUpdates';
 import {
@@ -201,17 +194,5 @@ export function handleUnlocked(event: Unlocked): void {
   pool.lockedAssets = pool.lockedAssets.minus(convertTokenToDecimal(event.params.assetsUnlocked, BI_6));
   pool.availableAssets = pool.totalAssets.minus(pool.lockedAssets);
   pool.utilizationRate = pool.lockedAssets.div(pool.totalAssets);
-  pool.save();
-}
-
-export function handlePaused(): void {
-  let pool = createPool();
-  pool.paused = true;
-  pool.save();
-}
-
-export function handleUnpaused(): void {
-  let pool = createPool();
-  pool.paused = false;
   pool.save();
 }

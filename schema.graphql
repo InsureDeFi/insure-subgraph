@@ -12,8 +12,6 @@ type Pool @entity {
 
   sharesTotalSupply: BigDecimal!
 
-  paused: Boolean!
-
   liquidityProviderCount: BigInt!
 }
 
@@ -80,9 +78,9 @@ type Transaction @entity {
   id: ID!
   blockNumber: BigInt!
   timestamp: BigInt!
-  deposits: [Deposit!]! @derivedFrom(field: "transaction")
-  withdrawals: [Withdraw!]! @derivedFrom(field: "transaction")
-  policies: [Policy!]! @derivedFrom(field: "transaction")
+  deposits: [Deposit!]!
+  withdrawals: [Withdraw!]!
+  policies: [Policy!]!
 }
 
 type Deposit @entity {

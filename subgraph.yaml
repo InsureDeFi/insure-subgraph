@@ -4,19 +4,39 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: RiskPool
-    network: godwoken-testnet
+    name: RiskPoolCore
+    network: godwoken_test
     source:
-      address: '0x67192F5F7eCD8CeF8eDB5fB89c6BC95351bBF4d7'
+      address: '0x77e325ED3CF3537cE3A92873678ABB104968cC02'
+      abi: RiskPoolCore
+      startBlock: 324807
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Asset
+      abis:
+        - name: RiskPoolCore
+          file: ./abis/RiskPoolCore.json
+      eventHandlers:
+        - event: AssetInitialized(indexed uint256,string)
+          handler: handleAssetInitialized
+      file: ./src/mappings.ts
+
+  - kind: ethereum/contract
+    name: RiskPool
+    network: godwoken_test
+    source:
+      address: '0x268fFA81C5668E8c918c7CFf2796edf8eBff7bFe'
       abi: RiskPool
-      startBlock: 223712
+      startBlock: 324813
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Pool
-        - Asset
         - Policy
         - User
         - LiquidityPosition
@@ -31,8 +51,6 @@ dataSources:
         - name: RiskPool
           file: ./abis/RiskPool.json
       eventHandlers:
-        - event: AssetInitialized(indexed uint256,string)
-          handler: handleAssetInitialized
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
@@ -43,10 +61,6 @@ dataSources:
           handler: handlePolicyPaid
         - event: Unlocked(uint256,uint256)
           handler: handleUnlocked
-        - event: Paused(address)
-          handler: handlePaused
-        - event: Unpaused(address)
-          handler: handleUnpaused
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/mappings.ts

@@ -11,7 +11,7 @@ import {
   User,
 } from '../generated/schema';
 
-export const RISK_POOL_ADDRESS = '0x67192F5F7eCD8CeF8eDB5fB89c6BC95351bBF4d7';
+export const RISK_POOL_ADDRESS = '0x268fFA81C5668E8c918c7CFf2796edf8eBff7bFe';
 export let BI_18 = BigInt.fromI32(18);
 export let BI_6 = BigInt.fromI32(6);
 
@@ -61,7 +61,6 @@ export function createPool(): Pool {
     pool.availableAssets = decimal.ZERO;
     pool.lockedAssets = decimal.ZERO;
     pool.sharesTotalSupply = decimal.ZERO;
-    pool.paused = false;
     pool.liquidityProviderCount = integer.ZERO;
     pool.save();
   }

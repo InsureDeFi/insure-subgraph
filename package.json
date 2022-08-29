@@ -1,18 +1,18 @@
 {
   "name": "insure-subgraph",
   "version": "1.0.0",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ insure/insure",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 insure/insure",
-    "create-local": "graph create --node http://localhost:8020/ insure/insure",
-    "remove-local": "graph remove --node http://localhost:8020/ insure/insure"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ insuredefi/insure",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 insuredefi/insure",
+    "create-local": "graph create --node http://localhost:8020/ insuredefi/insure",
+    "remove-local": "graph remove --node http://localhost:8020/ insuredefi/insure"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/insure/insure-subgraph.git"
+    "url": "git+https://github.com/insuredefi/insure-subgraph.git"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "0.33.0",
