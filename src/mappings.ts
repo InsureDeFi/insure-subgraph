@@ -137,6 +137,7 @@ export function handleInsured(event: Insured): void {
   policy.assetPrice = convertTokenToDecimal(event.params.currentAssetPrice, BI_18);
   policy.insured = createUser(event.params.insured).id;
   policy.payOutAmount = convertTokenToDecimal(event.params.payOutAmount, BI_6);
+  //TODO subtract
   policy.premium = convertTokenToDecimal(event.params.premium.plus(event.params.protocolFee), BI_6);
   policy.startTime = event.block.timestamp;
   policy.endTime = event.params.endTime;
